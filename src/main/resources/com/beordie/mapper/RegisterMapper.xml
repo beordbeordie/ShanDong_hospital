@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beordie.mapper.RegisterMapper">
+  <resultMap id="BaseResultMap" type="com.beordie.model.Register">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="id_car" jdbcType="VARCHAR" property="idCar" />
+    <result column="id_medical" jdbcType="VARCHAR" property="idMedical" />
+    <result column="register_price" jdbcType="DOUBLE" property="registerPrice" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="self_price" jdbcType="INTEGER" property="selfPrice" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="work" jdbcType="VARCHAR" property="work" />
+    <result column="look_doctor" jdbcType="INTEGER" property="lookDoctor" />
+    <result column="id_doctor" jdbcType="INTEGER" property="idDoctor" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <association property="doctor" javaType="com.beordie.model.Doctor" select="com.beordie.mapper.DoctorMapper.selectByPrimaryKey" column="id_doctor"/>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, id_car, id_medical, register_price, phone, self_price, sex, age, work, look_doctor, 
+    id_doctor, remark, status, time, department, name
+  </sql>
+  <select id="selectByExample" parameterType="com.beordie.model.RegisterExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from register
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from register
+    where id = #{id,jdbcType=INTEGER}
+
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from register
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.beordie.model.RegisterExample">
+    delete from register
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.beordie.model.Register">
+    insert into register (id, id_car, id_medical, 
+      register_price, phone, self_price, 
+      sex, age, work, look_doctor, 
+      id_doctor, remark, status, 
+      time, department, name
+      )
+    values (null, #{idCar,jdbcType=VARCHAR}, #{idMedical,jdbcType=VARCHAR},
+      #{registerPrice,jdbcType=DOUBLE}, #{phone,jdbcType=VARCHAR}, #{selfPrice,jdbcType=INTEGER}, 
+      #{sex,jdbcType=INTEGER}, #{age,jdbcType=INTEGER}, #{work,jdbcType=VARCHAR}, #{lookDoctor,jdbcType=INTEGER}, 
+      #{idDoctor,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 0,
+      NOW(), #{department,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.beordie.model.Register">
+    insert into register
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="idCar != null">
+        id_car,
+      </if>
+      <if test="idMedical != null">
+        id_medical,
+      </if>
+      <if test="registerPrice != null">
+        register_price,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="selfPrice != null">
+        self_price,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="work != null">
+        work,
+      </if>
+      <if test="lookDoctor != null">
+        look_doctor,
+      </if>
+      <if test="idDoctor != null">
+        id_doctor,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="idCar != null">
+        #{idCar,jdbcType=VARCHAR},
+      </if>
+      <if test="idMedical != null">
+        #{idMedical,jdbcType=VARCHAR},
+      </if>
+      <if test="registerPrice != null">
+        #{registerPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="selfPrice != null">
+        #{selfPrice,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="work != null">
+        #{work,jdbcType=VARCHAR},
+      </if>
+      <if test="lookDoctor != null">
+        #{lookDoctor,jdbcType=INTEGER},
+      </if>
+      <if test="idDoctor != null">
+        #{idDoctor,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.beordie.model.RegisterExample" resultType="java.lang.Long">
+    select count(*) from register
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update register
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.idCar != null">
+        id_car = #{record.idCar,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idMedical != null">
+        id_medical = #{record.idMedical,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registerPrice != null">
+        register_price = #{record.registerPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.selfPrice != null">
+        self_price = #{record.selfPrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.sex != null">
+        sex = #{record.sex,jdbcType=INTEGER},
+      </if>
+      <if test="record.age != null">
+        age = #{record.age,jdbcType=INTEGER},
+      </if>
+      <if test="record.work != null">
+        work = #{record.work,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lookDoctor != null">
+        look_doctor = #{record.lookDoctor,jdbcType=INTEGER},
+      </if>
+      <if test="record.idDoctor != null">
+        id_doctor = #{record.idDoctor,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.time != null">
+        time = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.department != null">
+        department = #{record.department,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update register
+    set id = #{record.id,jdbcType=INTEGER},
+      id_car = #{record.idCar,jdbcType=VARCHAR},
+      id_medical = #{record.idMedical,jdbcType=VARCHAR},
+      register_price = #{record.registerPrice,jdbcType=DOUBLE},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      self_price = #{record.selfPrice,jdbcType=INTEGER},
+      sex = #{record.sex,jdbcType=INTEGER},
+      age = #{record.age,jdbcType=INTEGER},
+      work = #{record.work,jdbcType=VARCHAR},
+      look_doctor = #{record.lookDoctor,jdbcType=INTEGER},
+      id_doctor = #{record.idDoctor,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      time = #{record.time,jdbcType=TIMESTAMP},
+      department = #{record.department,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.beordie.model.Register">
+    update register
+    <set>
+      <if test="idCar != null">
+        id_car = #{idCar,jdbcType=VARCHAR},
+      </if>
+      <if test="idMedical != null">
+        id_medical = #{idMedical,jdbcType=VARCHAR},
+      </if>
+      <if test="registerPrice != null">
+        register_price = #{registerPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="selfPrice != null">
+        self_price = #{selfPrice,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="work != null">
+        work = #{work,jdbcType=VARCHAR},
+      </if>
+      <if test="lookDoctor != null">
+        look_doctor = #{lookDoctor,jdbcType=INTEGER},
+      </if>
+      <if test="idDoctor != null">
+        id_doctor = #{idDoctor,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+<!--  按照主键ID和数据进行更新-->
+  <update id="updateByPrimaryKey" parameterType="com.beordie.model.Register">
+    update register
+    set id_car = #{idCar,jdbcType=VARCHAR},
+      id_medical = #{idMedical,jdbcType=VARCHAR},
+      register_price = #{registerPrice,jdbcType=DOUBLE},
+      phone = #{phone,jdbcType=VARCHAR},
+      self_price = #{selfPrice,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=INTEGER},
+      age = #{age,jdbcType=INTEGER},
+      work = #{work,jdbcType=VARCHAR},
+      look_doctor = #{lookDoctor,jdbcType=INTEGER},
+      id_doctor = #{idDoctor,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP},
+      department = #{department,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <resultMap id="selectByLimit" type="com.beordie.model.Register" extends="BaseResultMap">
+    <association property="doctor" javaType="com.beordie.model.Doctor" resultMap="com.beordie.mapper.DoctorMapper.BaseResultMap">
+    </association>
+  </resultMap>
+  <select id="selectByLimit" resultMap="selectByLimit" parameterType="hashmap">
+    select * from register r
+    <if test="id!=null">
+      and id = #{id}
+    </if>
+    <if test="doctorId!=null">
+      and id = #{id}
+    </if>
+    <if test="id!=null">
+      and id = #{id}
+    </if>
+    <if test="id!=null">
+      and id = #{id}
+    </if>
+    <if test="id!=null">
+      and id = #{id}
+    </if>
+  </select>
+
+
+  <update id="bounce" parameterType="int">
+    update register set status = 3 where id = #{id}
+  </update>
+
+  <update id="beHospitalized" parameterType="int">
+    update register set status = 1 where id = #{id}
+  </update>
+
+  <update id="discharged" parameterType="int">
+    update register set status = 2 where id = #{id}
+  </update>
+
+  <update id="bounces" parameterType="arraylist">
+    update register set status = 3 where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #(id)
+    </foreach>
+  </update>
+
+  <update id="beHospitalizeds" parameterType="arraylist">
+    update register set status = 1 where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #(id)
+    </foreach>
+  </update>
+
+  <update id="dischargeds" parameterType="arraylist">
+    update register set status = 2 where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #(id)
+    </foreach>
+  </update>
+
+</mapper>

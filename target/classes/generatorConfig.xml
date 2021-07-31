@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- 配置生成器:所有标有序号的内容都需要修改为自己的内容或者路径 -->
+<generatorConfiguration>
+    <!--1、数据库驱动jar:添加自己的jar路径 -->
+    <classPathEntry
+            location="D:\java_install\maven\apache-maven-3.6.3\repository\mysql\mysql-connector-java\8.0.15\mysql-connector-java-8.0.15.jar"/>
+    <context id="MyBatis" targetRuntime="MyBatis3">
+        <!--去除注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!--2、数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/shandong_hospital?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT"
+                        userId="root"
+                        password="yishun">
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer; -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--3、生成实体类指定包名以及生成的地址-->
+        <javaModelGenerator targetPackage="com.beordie.model"
+                            targetProject="src\main\java">
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--4、生成SQLmapper.xml文件 -->
+        <sqlMapGenerator targetPackage="com.beordie.mapper"
+                         targetProject="src\main\resources">
+        </sqlMapGenerator>
+        <!--5、生成Dao（Mapper）文件,生成接口 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.beordie.mapper"
+                             targetProject="src\main\java">
+        </javaClientGenerator>
+        <table tableName="register">
+<!--            <property name="useActualColumnNames" value="true"/>-->
+        </table>
+    </context>
+</generatorConfiguration>

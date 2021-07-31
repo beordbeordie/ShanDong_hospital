@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加医生--中软高科-2015</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../../Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="../../Css/style.css"/>
+    <script type="text/javascript" src="../../Js/jquery.js"></script>
+    <script type="text/javascript" src="../Js/jquery.sorted.js"></script>
+    <script type="text/javascript" src="../../Js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../Js/ckform.js"></script>
+    <script type="text/javascript" src="../../Js/common.js"></script>
+    <script type="text/javascript" src="../../Js/ckeditor/ckeditor.js"></script>
+
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#backid').click(function () {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</head>
+<body>
+<form action="index.html" method="post" class="definewidth m20">
+    <table class="table table-bordered table-hover definewidth m10">
+        <tr>
+            <td width="10%" class="tableleft">姓名</td>
+            <td><input type="text" name="name" value=""/></td>
+        </tr>
+
+        <tr>
+            <td width="10%" class="tableleft">身份证号</td>
+            <td><input type="text" name="idCar" value=""/></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">手机</td>
+            <td><input type="text" name="phone" value=""/></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">座机</td>
+            <td><input type="text" name="telphone" value=""/></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">性别</td>
+            <td><input type="radio" name="sex" id="male" value=""/>男&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="sex" id="female" value=""/>女
+            </td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">出生年月</td>
+            <td><input type="datetime-local" name="birthday" value=""/></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">年龄</td>
+            <td><input type="text" name="age" value="" readonly/></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">电子邮箱</td>
+            <td><input type="email" name="email" value=""/></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">所属科室</td>
+            <td>
+                <select name="department">
+                    <option value="急诊科">急诊科</option>
+                    <option value="骨科">骨科</option>
+                    <option value="血液科">血液科</option>
+                    <option value="外科">外科</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">学历</td>
+            <td>
+                <select name="education">
+                    <option>专科</option>
+                    <option>本科</option>
+                    <option>博士</option>
+                    <option>博士后</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td width="10%" class="tableleft">备注</td>
+            <td><textarea name="Description"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <center>
+                    <button type="button" class="btn btn-primary" type="button" id="save" onclick="save()">保存</button> &nbsp;&nbsp;
+                    <button type="button" class="btn btn-success" name="backid" id="backid">返回列表</button>
+                </center>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script>
+    // 姓名验证
+    function checkName(name) {
+        let reg = new RegExp(/^[\u4e00-\u9fa5]{2,6}$/);
+        if (reg.test(name))
+            return true;
+        else {
+            alert('姓名格式错误');
+            return false;
+        }
+    }
+
+    // 身份证验证
+    function checkNumber(number) {
+        let reg = new RegExp(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/);
+        if (reg.test(number))
+            return true;
+        else {
+            alert('身份证格式错误');
+            return false;
+        }
+    }
+
+    // 手机号验证
+    function checkPhone(phone) {
+        let reg = new RegExp(/^[1][3,4,5,6,7,8,9][0-9]{9}$/);
+        if (reg.test(phone))
+            return true;
+        else {
+            alert('手机号格式错误');
+            return false;
+        }
+    }
+
+    // 座机号验证
+    function checkTelPhone(phone) {
+        let reg = new RegExp(/^0\d{2,3}-?\d{7,8}$/);
+        if (reg.test(phone))
+            return true;
+        else {
+            alert('座机号格式错误');
+            return false;
+        }
+    }
+
+    // 计算年龄和性别
+    function analyzeIDCard(IDCard) {
+        let sexAndAge = {};
+        let userCard = IDCard.toString();
+        if (parseInt(userCard.substr(16, 1)) % 2 == 1) {
+            sexAndAge.sex = '男';
+        } else {
+            sexAndAge.sex = '女';
+        }
+        let yearBirth = userCard.substring(6, 10);
+        let myDate = new Date();
+        let age = myDate.getFullYear() - yearBirth;
+        let year = IDCard.substring(6, 10);
+        let month = IDCard.substring(10, 12);
+        let day = IDCard.substring(12, 14);
+        let birthDate = year + '-' + month + '-' + day;
+        sexAndAge.age = age;
+        sexAndAge.birthday = birthDate;
+        return sexAndAge;
+    }
+
+    $(function () {
+        // 填写完身份证自动填充年龄和性别
+        $('input[name=idCar]').blur(function () {
+            let idCar = $('input[name=idCar]').val();
+            if(checkNumber(idCar)) {
+                let sexAndAge = analyzeIDCard(idCar);
+                let birth = sexAndAge.birthday;
+                let age = sexAndAge.age;
+                let sex = sexAndAge.sex;
+                $('input[name=age]').val(age);
+                $('input[name=birthday]').val(birth);
+                if (sex == "男") {
+                    $('#male').prop('checked',1);
+                }
+                else {
+                    $('#female').prop('checked',1);
+                }
+            }
+        });
+    });
+
+    function save() {
+        let name = $('input[name=name]').val();
+        let idCar = $('input[name=idCar]').val();
+        let phone = $('input[name=phone]').val();
+        let telphone = $('input[name=telphone]').val();
+        if (checkName(name) && checkNumber(idCar) && checkPhone(phone) && checkTelPhone(telphone)) {
+            $.ajax({
+                type: "POST",
+                url: "/doctor/add",
+                data: $("#myForm").serialize(),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code == 200) {
+                        location.href = 'index.html';
+                    } else {
+                        alert('添加失败');
+                    }
+                }
+            });
+        }
+    }
+</script>
+</html>

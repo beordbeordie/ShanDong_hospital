@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace="名称必须与映射的类的名字一致，是完全限定名"-->
+<mapper namespace="com.beordie.mapper.UserMapper">
+    <resultMap id="baseMap" type="com.beordie.model.User">
+        <id column="id" property="id"/>
+        <result column="login_name" property="loginName"/>
+        <result column="password" property="password"/>
+        <result column="true_name" property="trueName"/>
+        <result column="email" property="email"/>
+        <result column="status" property="status"/>
+        <result column="role_id" property="roleId"/>
+    </resultMap>
+
+
+    <select id="selectById" resultMap="baseMap">
+        select * from user where id = #{id}
+    </select>
+
+    <select id="selectByUser" resultMap="baseMap" parameterType="hashmap">
+        select * from user where login_name = #{name} and password = #{password}
+    </select>
+</mapper>

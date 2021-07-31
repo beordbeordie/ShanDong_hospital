@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>门诊医生--中软高科-2015</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../../Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="../../Css/style.css"/>
+    <script type="text/javascript" src="../../Js/jquery.js"></script>
+    <script type="text/javascript" src="../Js/jquery.sorted.js"></script>
+    <script type="text/javascript" src="../../Js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../Js/ckform.js"></script>
+    <script type="text/javascript" src="../../Js/common.js"></script>
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#newNav').click(function () {
+                window.location.href = "add.html";
+            });
+        });
+
+        function checkall() {
+            var alls = document.getElementsByName("check");
+            var ch = document.getElementById("checkall");
+            if (ch.checked) {
+                for (var i = 0; i < alls.length; i++) {
+                    alls[i].checked = true;
+                }
+            } else {
+                for (var i = 0; i < alls.length; i++) {
+                    alls[i].checked = false;
+                }
+            }
+        }
+
+        function delAll() {
+            var alls = document.getElementsByName("check");
+            var ids = new Array();
+            for (var i = 0; i < alls.length; i++) {
+                if (alls[i].checked) {
+                    ids.push(alls[i].value);
+                }
+            }
+            if (ids.length > 0) {
+                if (confirm("确认操作?")) {
+                    alert("成功!");
+                }
+            } else {
+                alert("请选中要操作的项");
+            }
+        }
+    </script>
+</head>
+<body>
+
+<form id="myForm" action="index.html" method="post" class="definewidth m20">
+    <table class="table table-bordered table-hover definewidth m10">
+        <tr>
+            <td width="10%" class="tableleft">医生编号：</td>
+            <td><input type="text" name="id" value=""/></td>
+
+            <td width="10%" class="tableleft">医生姓名：</td>
+            <td><input type="text" name="name" value=""/></td>
+
+            <td width="10%" class="tableleft">科室：</td>
+            <td><input type="text" name="department" value=""/></td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <center>
+                    <button type="button" class="btn btn-primary" type="button" onclick="loadData()">查询</button>
+                    <button type="button" class="btn btn-primary" type="button" onclick="clearAll()">清空</button>
+                </center>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<table class="table table-bordered table-hover definewidth m10">
+    <thead>
+    <tr>
+        <th><input type="checkbox" id="checkall" onChange="checkall();"></th>
+        <th>医生编号</th>
+        <th>医生姓名</th>
+        <th>入院时间</th>
+        <th>所属科室</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="body">
+        <!-- 有数据库查询信息后给出数据 -->
+    </tbody>
+    
+</table>
+
+<table class="table table-bordered table-hover definewidth m10">
+    <tr>
+        <th colspan="5">
+            <div class="inline pull-right page">
+                <a class='pagination' id="firstPage" href='#'>第一页</a>
+                <a class='pagination' id="prePage" href='#'>上一页</a>
+
+                <a class='pagination' id="nextPage" href='#'>下一页</a>
+                <a class='pagination' id="lastPage" href='#'>最后一页</a>
+
+                &nbsp;&nbsp;&nbsp;共<span class='current' id="total"></span>&nbsp;条记录<span class='current'><span
+                    id="pageNum"></span>/<span id="pageSize"></span> </span>页
+            </div>
+            <div>
+                <button type="button" class="btn btn-success" id="newNav">添加新医生</button>
+                <button type="button" class="btn btn-success" id="delPro">导出Excel</button>
+            </div>
+
+        </th>
+    </tr>
+</table>
+<script>
+    //页面加载完毕之后发送异步请求
+    $(document).ready(function() {
+        loadData();
+        $("a[class='pagination']").click(function () {
+            if (($(this).attr("class")) == 'disabled')
+                return;
+            let num = $(this).attr("name");
+            $("#pageNum").val(num);
+            loadData();
+        });
+        // 导出excel表格
+    });
+    // 清空查询条件
+    function clearAll() {
+        $("input[name='id']").val('');
+        $("input[name='name']").val('');
+        $("input[name='department']").val('');
+        loadData();
+    }
+    //填充分页信息
+    function fillPageData(pageInfo) {
+        //填充信息
+        $("#total").text(pageInfo.total);
+        $("#pageSize").text(pageInfo.pages);
+        $("#pageNum").text(pageInfo.pageNum);
+        //设置按钮的属性值和样式
+        $("#firstPage").attr("name", 1);
+        $("#prePage").attr("name", pageInfo.prePage);
+        $("#nextPage").attr("name", pageInfo.nextPage);
+        $("#lastPage").attr("name", pageInfo.pages);
+
+        $("#firstPage").attr("href", "javascript:void(0)");
+        $("#prePage").attr("href", "javascript:void(0)");
+        $("#nextPage").attr("href", "javascript:void(0)");
+        $("#lastPage").attr("href", "javascript:void(0)");
+        if (pageInfo.isFirstPage) {//如果是第一页：上一页和首页禁用
+            $("#firstPage").removeAttr("href");
+            $("#prePage").removeAttr("href");
+        }
+        if (pageInfo.isLastPage) {//如果已经是最后一页：下一页和末页禁用
+            $("#nextPage").removeAttr("href");
+            $("#lastPage").removeAttr("href");
+        }
+    }
+
+    //加载数据
+    function loadData() {
+        $.ajax({
+            type: "GET",
+            url: "/doctor/list",
+            data: $("#myForm").serialize(),//主要是分页和多条件参数数据
+            dataType: "json",
+            success: function (vo) {
+                let list = vo.pageInfo.list;
+                let str = "";
+                for (let i = 0; i < list.length; i++) {
+                    let obj = list[i];
+                    let id = obj.id;
+                    let name = obj.name;
+                    let time = obj.inTime;
+                    let depart = obj.department;
+                    str += "<tr> " 
+                        + "<td style='vertical-align:middle;'><input type='checkbox' "+ '' +" value='"+ id +"'></td>" 
+                        + "<td style='vertical-align:middle;'>" + id + "</td>"
+                        + "<td style='vertical-align:middle;'>" + name + "</td>"
+                        + "<td style='vertical-align:middle;'>" + time + "</td>"
+                        + "<td style='vertical-align:middle;'>" + depart + "</td>"
+                        + "<td style='vertical-align:middle;'><a href='look.html?id="+ id +"'>详情>>></a>&nbsp;&nbsp;&nbsp;<a href='edit.html?id="+ id +"'>更改</a></td>"
+                        + "</tr>";
+                }
+                $("#body").html(str);
+                //填充分页数据
+                fillPageData(vo.pageInfo);
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>
